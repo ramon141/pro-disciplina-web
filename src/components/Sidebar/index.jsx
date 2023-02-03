@@ -1,5 +1,5 @@
 import { Grid, TextField } from "@mui/material";
-import ufopaLogoImg from '../../assets/ufopa-logo.png';
+import picUserImg from '../../assets/picture-user.png';
 import logoImg from '../../assets/LOGO.svg';
 import menuIconImg from '../../assets/menu-icon.svg';
 
@@ -10,6 +10,7 @@ const classes = {
         padding: '0px 27px',
     },
     rootGrid: {
+        height: '100%',
         color: 'white'
     },
     left: {
@@ -24,7 +25,6 @@ const classes = {
         textAlign: 'center',
         fontFamily: 'Roboto',
         fontSize: 12
-
     }
 }
 
@@ -76,23 +76,19 @@ export default function Sidebar() {
 
                     </Grid>
 
-
-                    <Grid>
-                        <TextField
-                            size='small'
-                        />
-                    </Grid>
-
                 </Grid>
 
                 <Grid
                     container
                     item
-                    sm={4} md={4} lg={4}
+                    sm={1} md={1} lg={1}
                     style={classes.right}
                     alignItems='center'
+                    justifyContent='right'
                 >
-
+                    <Grid item>
+                        <img src={picUserImg} width={30} />
+                    </Grid>
                 </Grid>
             </Grid>
         </div>
