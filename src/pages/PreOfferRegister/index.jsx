@@ -72,32 +72,16 @@ export default function PreOfferRegister() {
 
     useEffect(() => {
         api.get('disciplines').then((response) => {
-            // setDisciplines(response.data);
-            setDisciplines([
-                { id: 1, name: 'BD', menu: 'Uma ementa', workload: 40 },
-                { id: 2, name: 'BDII', menu: 'Uma ementa 2', workload: 60 },
-                { id: 3, name: 'BDIII', menu: 'Uma ementa 3', workload: 80 }
-            ]);
+            setDisciplines(response.data);
         });
 
         api.get('teams').then((response) => {
-            // setTeams(response.data);
-            setTeams([
-                { id: 1, "entry_year": 2020, "ppcId": 1 },
-                { id: 2, "entry_year": 2019, "ppcId": 1 },
-                { id: 3, "entry_year": 2018, "ppcId": 1 },
-            ])
+            setTeams(response.data);
         });
 
-        api.get('institutes').then((response) => {
-            // setInstitutes(response.data);
-
-            setInstitutes([
-                { id: 1, "name": "Insituto de Engenharia", "acronym": "IEG" },
-                { id: 2, "name": "Biologia", "acronym": "IBEF" },
-                { id: 3, "name": "Insituto do professor", "acronym": "ICED" },
-            ]);
-
+        const d = { order: 'name DESC' }
+        api.get(`institutes?filter=${JSON.stringify(d)}`).then((response) => {
+            setInstitutes(response.data);
         });
 
 
@@ -107,14 +91,7 @@ export default function PreOfferRegister() {
         };
 
         api.get(`rents?filter=${JSON.stringify(data)}`).then((response) => {
-            // setLastRent(response.data[0].id);
-            setLastRent({
-                "start_request": "2023-02-04T01:13:59.259Z",
-                "id": 1,
-                "finish_request": "2023-02-04T01:13:59.259Z",
-                "start_indication": "2023-02-04T01:13:59.259Z",
-                "finish_indication": "2023-02-04T01:13:59.259Z"
-            });
+            setLastRent(response.data[0].id);
         });
 
     }, [])
@@ -216,7 +193,7 @@ export default function PreOfferRegister() {
 
                     <Grid item xs={12} sm={4} md={3} lg={3}>
                         {autocompleteFormated(isProDiscipline,
-                            'É pré oferta?',
+                            'É pró disciplina?',
                             setIsProDiscipline,
                             ['Sim', 'Não'],
                             (value) => { return value || 'Selecione uma Opção' })
