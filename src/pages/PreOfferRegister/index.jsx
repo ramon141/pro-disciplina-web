@@ -55,15 +55,15 @@ const classes = {
     }
 }
 
-export default function Home() {
+export default function PreOfferRegister() {
 
 
     const [period, setPeriod] = useState(null);
+    const [lastRent, setLastRent] = useState();
     const [isProDiscipline, setIsProDiscipline] = useState(null);
     const [shift, setShift] = useState(null);
     const [disciplineChoiced, setDisciplineChoiced] = useState(null);
     const [teamChoiced, setTeamChoiced] = useState(null);
-    const [instituteChoiced, setintituteChoiced] = useState(null);
 
     const [disciplines, setDisciplines] = useState([]);
     const [teams, setTeams] = useState([]);
@@ -74,18 +74,18 @@ export default function Home() {
         api.get('disciplines').then((response) => {
             // setDisciplines(response.data);
             setDisciplines([
-                { name: 'BD', menu: 'Uma ementa', workload: 40 },
-                { name: 'BDII', menu: 'Uma ementa 2', workload: 60 },
-                { name: 'BDIII', menu: 'Uma ementa 3', workload: 80 }
+                { id: 1, name: 'BD', menu: 'Uma ementa', workload: 40 },
+                { id: 2, name: 'BDII', menu: 'Uma ementa 2', workload: 60 },
+                { id: 3, name: 'BDIII', menu: 'Uma ementa 3', workload: 80 }
             ]);
         });
 
         api.get('teams').then((response) => {
             // setTeams(response.data);
             setTeams([
-                { "entry_year": 2020, "ppcId": 1 },
-                { "entry_year": 2019, "ppcId": 1 },
-                { "entry_year": 2018, "ppcId": 1 },
+                { id: 1, "entry_year": 2020, "ppcId": 1 },
+                { id: 2, "entry_year": 2019, "ppcId": 1 },
+                { id: 3, "entry_year": 2018, "ppcId": 1 },
             ])
         });
 
@@ -93,28 +93,47 @@ export default function Home() {
             // setInstitutes(response.data);
 
             setInstitutes([
-                { "name": "Insituto de Engenharia", "acronym": "IEG" },
-                { "name": "Biologia", "acronym": "IBEF" },
-                { "name": "Insituto do professor", "acronym": "ICED" },
+                { id: 1, "name": "Insituto de Engenharia", "acronym": "IEG" },
+                { id: 2, "name": "Biologia", "acronym": "IBEF" },
+                { id: 3, "name": "Insituto do professor", "acronym": "ICED" },
             ]);
 
-        }).catch((e) => console.log(e));
+        });
+
+
+        const data = {
+            order: 'start_request DESC',
+            limit: 1
+        };
+
+        api.get(`rents?filter=${JSON.stringify(data)}`).then((response) => {
+            // setLastRent(response.data[0].id);
+            setLastRent({
+                "start_request": "2023-02-04T01:13:59.259Z",
+                "id": 1,
+                "finish_request": "2023-02-04T01:13:59.259Z",
+                "start_indication": "2023-02-04T01:13:59.259Z",
+                "finish_indication": "2023-02-04T01:13:59.259Z"
+            });
+        });
 
     }, [])
 
     const post = () => {
-        // const data = {
-        //     date: "2023-02-03T21:26:22.911Z",
-        //     is_pro_discipline: isProDiscipline === 'Sim',
-        //     shift: shift.substring(0, 1),
-        //     period: period.substring(0, 1),
-        //     professorId: 1,
-        //     disciplineId: disciplineChoiced.id,
-        //     teamId: teamChoiced.id,
-        //     rentId: 
-        // }
+        const data = {
+            date: "2023-02-03T21:26:22.911Z",
+            is_pro_discipline: isProDiscipline === 'Sim' ? 1 : 0,
+            shift: shift.substring(0, 1),
+            period: period.substring(0, 1),
+            professorId: "123",
+            disciplineId: disciplineChoiced.id,
+            teamId: teamChoiced.id,
+            rentId: lastRent.id
+        };
 
-
+        api.post('pre-offers', data).then((response) => {
+            alert('Pré Oferta cadastrada com sucesso!')
+        })
     }
 
 
@@ -127,6 +146,7 @@ export default function Home() {
                 getOptionLabel={getOptionLabel}
                 renderInput={(params) => <TextField {...params} label={label} />}
                 onChange={(event, newValue) => {
+                    console.log(newValue)
                     onChange(newValue)
                 }}
                 size='small'
@@ -186,15 +206,6 @@ export default function Home() {
                     </Grid>
 
                     <Grid item xs={12} sm={4} md={3} lg={3}>
-                        {autocompleteFormated(instituteChoiced,
-                            'Instituto',
-                            setintituteChoiced,
-                            institutes,
-                            (value) => { return value?.name || 'Selecione uma Opção' })
-                        }
-                    </Grid>
-
-                    <Grid item xs={12} sm={4} md={3} lg={3}>
                         {autocompleteFormated(shift,
                             'Turno',
                             setShift,
@@ -225,10 +236,10 @@ export default function Home() {
                         <Grid item>
 
                             <Button
-                                onClick={() => alert("Submetido")}
+                                onClick={post}
                                 style={classes.auth}
                             >
-                                Autenticar
+                                Cadastrar
                             </Button>
                         </Grid>
                     </Grid>
