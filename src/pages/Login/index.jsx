@@ -1,4 +1,4 @@
-import Sidebar from "../../components/SidebarLogout";
+import Header from "../../components/HeaderLogout";
 import { Button, Grid, TextField } from "@mui/material";
 import { useState } from "react";
 import { classes } from "./styles";
@@ -12,7 +12,7 @@ export default function Login() {
 
   return (
     <>
-      <Sidebar />
+      <Header />
 
       <div style={classes.root}>
         <div style={classes.formArea}>

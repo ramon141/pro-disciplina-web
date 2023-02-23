@@ -1,97 +1,121 @@
-import { Grid, TextField } from "@mui/material";
-import picUserImg from '../../assets/picture-user.png';
-import logoImg from '../../assets/LOGO.svg';
-import menuIconImg from '../../assets/menu-icon.svg';
+import * as React from "react";
+import { styled } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import MuiDrawer from "@mui/material/Drawer";
+import CssBaseline from "@mui/material/CssBaseline";
+import Divider from "@mui/material/Divider";
+import Header from "../Header";
+import ListItems from "./listItems";
+import ufopaLogoImg from "../../assets/ufopa-logo.png";
+import { Grid } from "@mui/material";
 
-const classes = {
-    root: {
-        height: 57,
-        backgroundColor: '#02121D',
-        padding: '0px 27px',
-    },
-    rootGrid: {
-        height: '100%',
-        color: 'white'
-    },
-    left: {
-        fontFamily: 'Comfortaa',
-        fontStyle: 'normal',
-        fontWeight: 700,
-        fontSize: '16px',
-        lineHeight: '36px',
-        color: '#FFFFFF',
-    },
-    right: {
-        textAlign: 'center',
-        fontFamily: 'Roboto',
-        fontSize: 12
-    }
-}
+const drawerWidth = 264;
 
+const openedMixin = (theme) => ({
+  backgroundColor: "#02121D",
+  width: drawerWidth,
+  transition: theme.transitions.create("width", {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.enteringScreen,
+  }),
+  overflowX: "hidden",
+});
 
-export default function Sidebar() {
+const closedMixin = (theme) => ({
+  backgroundColor: "#02121D",
+  transition: theme.transitions.create("width", {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  overflowX: "hidden",
+  width: `calc(${theme.spacing(7)} + 1px)`,
+  [theme.breakpoints.up("sm")]: {
+    width: `calc(${theme.spacing(8)} + 1px)`,
+  },
+});
 
-    return (
-        <div style={classes.root}>
-            <Grid
-                container
-                justifyContent='space-between'
-                alignItems='center'
-                style={classes.rootGrid}
-            >
-                <Grid
-                    container
-                    item
-                    sm={8} md={8} lg={8}
-                    alignItems='center'
-                    spacing={3}
-                    style={classes.left}
-                >
-                    <Grid item style={{ marginBottom: 3 }}>
-                        <img src={menuIconImg} width={23} />
-                    </Grid>
+const Drawer = styled(MuiDrawer, {
+  shouldForwardProp: (prop) => prop !== "open",
+})(({ theme, open }) => ({
+  width: drawerWidth,
+  flexShrink: 0,
+  whiteSpace: "nowrap",
+  boxSizing: "border-box",
+  backgroundColor: "red",
+  ...(open && {
+    ...openedMixin(theme),
+    "& .MuiDrawer-paper": openedMixin(theme),
+  }),
+  ...(!open && {
+    ...closedMixin(theme),
+    "& .MuiDrawer-paper": closedMixin(theme),
+  }),
+}));
 
-                    <Grid
-                        container
-                        item
-                        sm={3.7} md={3.7} lg={3.7}
-                        alignItems='center'
-                        spacing={0.6}
-                    >
+export default function Sidebar({ children }) {
+  const [open, setOpen] = React.useState(false);
 
-                        <Grid item style={{ marginBottom: -5, }}>
-                            <img src={logoImg} width={30} />
-                        </Grid>
+  const toogleDrawer = () => setOpen((prev) => !prev);
 
-                        <Grid item
-                            style={{
-                                fontFamily: 'Comfortaa',
-                                marginTop: -9,
-                                fontSize: 20,
-                                fontWeight: 700,
-                                color: '#E5E5E5',
-                            }}>
-                            prodisciplina
-                        </Grid>
+  return (
+    <Box sx={{ display: "flex" }}>
+      <CssBaseline />
 
-                    </Grid>
+      <Header onHandleDrawer={toogleDrawer} />
 
-                </Grid>
+      <Drawer
+        variant="permanent"
+        open={open}
+        sx={{ "& .MuiPaper-elevation": { marginTop: 10 } }}
+      >
+        <Divider />
 
-                <Grid
-                    container
-                    item
-                    sm={1} md={1} lg={1}
-                    style={classes.right}
-                    alignItems='center'
-                    justifyContent='right'
-                >
-                    <Grid item>
-                        <img src={picUserImg} width={30} />
-                    </Grid>
-                </Grid>
-            </Grid>
-        </div>
-    );
+        <ListItems isOpen={open} />
 
+        <Grid
+          container
+          justifyContent={open ? "center" : "left"}
+          style={{
+            position: "absolute",
+            bottom: 100,
+            textAlign: "center",
+            padding: open ? 20 : 5,
+            color: "white",
+          }}
+        >
+          <Grid item xs={4} sm={4} md={4} style={{ marginTop: -5 }}>
+            <img src={ufopaLogoImg} width={open ? 60 : 50} />
+          </Grid>
+
+          <Grid
+            item
+            xs={5.5}
+            sm={5.5}
+            md={5.5}
+            sx={{
+              whiteSpace: "normal",
+              display: open ? "block" : "none",
+              fontSize: 10,
+            }}
+          >
+            <span>Universidade Federal do Oeste do Pará</span>
+            <hr />
+            UFOPA
+          </Grid>
+        </Grid>
+      </Drawer>
+
+      <Box
+        component="main"
+        sx={{
+          padding: 3.2,
+          marginTop: 7,
+          width: "100%",
+          backgroundColor: "#F3EFF5",
+        }}
+      >
+        {children}
+      </Box>
+    </Box>
+  );
 }
