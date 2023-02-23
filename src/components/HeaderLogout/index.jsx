@@ -21,8 +21,6 @@ const classes = {
     color: "#FFFFFF",
   },
   lblUniversity: {
-    width: "100%",
-    flexWrap: "none",
     textAlign: "center",
     fontFamily: "Roboto",
     fontSize: 12,
@@ -35,7 +33,7 @@ const classes = {
   },
 };
 
-export default function SidebarLogout() {
+export default function HeaderLogout() {
   return (
     <div style={classes.root}>
       <Grid
